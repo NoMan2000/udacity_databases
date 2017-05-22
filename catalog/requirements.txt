@@ -1,0 +1,16 @@
+click==6.7
+decorator==4.0.11
+Flask==0.12.2
+Flask-SQLAlchemy==2.2
+Flask-WTF==0.14.2
+gunicorn==19.7.1
+itsdangerous==0.24
+Jinja2==2.9.6
+MarkupSafe==1.0
+psycopg2==2.7.1
+ratelim==0.1.6
+requests==2.14.2
+six==1.10.0
+SQLAlchemy==1.1.10
+Werkzeug==0.12.2
+WTForms==2.1
