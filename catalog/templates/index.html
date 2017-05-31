@@ -5,7 +5,9 @@
     <div class="container">
       
       <div class="section-content">
-
+        {% for route in route_list %}
+          <a href="{{route}}">{{route}}</a>
+        {% endfor %}
 
       </div>
 

@@ -1,23 +1,29 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from models import db, User, Place
-from forms import SignupForm, LoginForm, AddressForm
+from models import db, Articles, Author
+from forms import Articles, Authors
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = # add your Heroku Postgres database URL here
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/public'
 db.init_app(app)
 
 app.secret_key = "development-key"
 
-@app.route("/")
-def index():
-  return render_template("index.html")
+route_list = dict(
+  index = '/',
+  about = '/about',
+  articles = '/articles',
+)
 
-@app.route("/about")
+@app.route(route_list.get('index', '/'))
+def index():
+  return render_template("index.html", route_list=route_list)
+
+@app.route(route_list.get('about'))
 def about():
   return render_template("about.html")
 
-@app.route("/signup", methods=["GET", "POST"])
+@app.route(route_list.get('articles'), methods=["GET", "POST"])
 def signup():
   if 'email' in session:
     return redirect(url_for('home'))
