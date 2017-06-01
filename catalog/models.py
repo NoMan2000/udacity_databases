@@ -1,15 +1,17 @@
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 class Articles(db.Model):
   __tablename__ = 'articles'
-  author = db.Column(db.Integer, db.ForeignKey('authors.id'), primary_key = True, nullable=False)
+
+  id = db.Column(db.Integer, primary_key = True, nullable=False)
   title = db.Column(db.String, nullable=False)
   slug = db.Column(db.String, nullable=False, unique=True)
   lead = db.Column(db.String)
   body = db.Column(db.String)
   time = db.Column(db.DateTime)
+  author = db.Column(db.Integer, db.ForeignKey('authors.id'))
 
   def __init__(self, author, title, slug, lead, body, time):
     self.author = author
@@ -31,6 +33,10 @@ class Author(db.Model):
   id = db.Column(db.Integer, nullable=False, primary_key=True)
   name = db.Column(db.String, nullable=False)
   bio = db.Column(db.String)
+  author = db.relationship(
+    'Articles',
+    primaryjoin=(Articles.author == id),
+    backref='article')
 
   def __init__(self, id, name, bio):
     self.id = id
@@ -51,3 +57,7 @@ class Log(db.Model):
     self.method = method
     self.status = status
     self.time = time
+
+Articles.authors = db.relationship(
+    'Author',
+    backref='authors')

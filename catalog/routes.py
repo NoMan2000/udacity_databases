@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from models import db, Articles, Author
-from forms import Articles, Authors
+from forms import ArticlesForm, AuthorsForm
 
 app = Flask(__name__)
 
@@ -13,9 +13,12 @@ route_list = dict(
   index = '/',
   about = '/about',
   articles = '/articles',
+  authors = '/authors',
 )
 
 @app.route(route_list.get('index', '/'))
+@app.route('/index')
+@app.route('/index.html')
 def index():
   return render_template("index.html", route_list=route_list)
 
@@ -24,82 +27,48 @@ def about():
   return render_template("about.html")
 
 @app.route(route_list.get('articles'), methods=["GET", "POST"])
-def signup():
-  if 'email' in session:
-    return redirect(url_for('home'))
+def articles_list():
 
-  form = SignupForm()
+  form = ArticlesForm()
+
+  all_articles = Articles.query.all()
+  all_authors = Author.query.all()
 
   if request.method == "POST":
-    if form.validate() == False:
-      return render_template('signup.html', form=form)
-    else:
-      newuser = User(form.first_name.data, form.last_name.data, form.email.data, form.password.data)
-      db.session.add(newuser)
+    if form.validate() != False:
+      newArticle = Articles(
+        form.author.data,
+        form.title.data,
+        form.slug.data,
+        form.lead.data,
+        form.body.data,
+      )
+      print(newArticle)
+      db.session.add(newArticle)
       db.session.commit()
 
-      session['email'] = newuser.email
-      return redirect(url_for('home'))
+  return render_template('articles.html', form=form, all_articles=all_articles, all_authors=all_authors)
 
-  elif request.method == "GET":
-    return render_template('signup.html', form=form)
-
-@app.route("/login", methods=["GET", "POST"])
+@app.route(route_list.get('authors'), methods=["GET", "POST"])
 def login():
   if 'email' in session:
     return redirect(url_for('home'))
 
-  form = LoginForm()
+  form = AuthorsForm()
 
   if request.method == "POST":
     if form.validate() == False:
-      return render_template("login.html", form=form)
+      return render_template("authors.html", form=form)
     else:
-      email = form.email.data 
-      password = form.password.data 
+      name = form.name.data
 
-      user = User.query.filter_by(email=email).first()
-      if user is not None and user.check_password(password):
-        session['email'] = form.email.data 
-        return redirect(url_for('home'))
-      else:
-        return redirect(url_for('login'))
+      form = AuthorsForm.query.filter_by(name=name).first()
+
+      return redirect(url_for('authors.html'), form=form)
 
   elif request.method == 'GET':
-    return render_template('login.html', form=form)
+    return render_template('authors.html', form=form)
 
-@app.route("/logout")
-def logout():
-  session.pop('email', None)
-  return redirect(url_for('index'))
-
-@app.route("/home", methods=["GET", "POST"])
-def home():
-  if 'email' not in session:
-    return redirect(url_for('login'))
-
-  form = AddressForm()
-
-  places = []
-  my_coordinates = (37.4221, -122.0844)
-
-  if request.method == 'POST':
-    if form.validate() == False:
-      return render_template('home.html', form=form)
-    else:
-      # get the address
-      address = form.address.data 
-
-      # query for places around it
-      p = Place()
-      my_coordinates = p.address_to_latlng(address)
-      places = p.query(address)
-
-      # return those results
-      return render_template('home.html', form=form, my_coordinates=my_coordinates, places=places)
-
-  elif request.method == 'GET':
-    return render_template("home.html", form=form, my_coordinates=my_coordinates, places=places)
 
 if __name__ == "__main__":
   app.run(debug=True)

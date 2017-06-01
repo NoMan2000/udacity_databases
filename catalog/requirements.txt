@@ -4,6 +4,8 @@ Flask==0.12.2
 Flask-SQLAlchemy==2.2
 Flask-WTF==0.14.2
 gunicorn==19.7.1
+infinity==1.4
+intervals==0.8.0
 itsdangerous==0.24
 Jinja2==2.9.6
 MarkupSafe==1.0
@@ -12,5 +14,9 @@ ratelim==0.1.6
 requests==2.14.2
 six==1.10.0
 SQLAlchemy==1.1.10
+SQLAlchemy-Utils==0.32.14
+validators==0.11.3
 Werkzeug==0.12.2
 WTForms==2.1
+WTForms-Alchemy==0.16.2
+WTForms-Components==0.10.3

@@ -1,0 +1,36 @@
+{% extends "partials/layout.html" %}
+
+{% block content %}
+  <main class="container signup-section">
+    <div class="section-content">
+      <h2>Add New Author</h2>
+
+      <form method="POST" id="submitAuthor" action="/update_author">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group" id="authorTitle">
+          {{ form.title.label }}
+          {{ form.title }}
+        </div>
+
+        <div class="form-group" id="authorLabel">
+          {{ form.slug.label }}
+          {{ form.slug }}
+        </div>
+
+        <div class="form-group" id="authorLead">
+          {{ form.lead.label }}
+          {{ form.lead }}
+        </div>
+
+        <div class="form-group" id="authorBody">
+          {{ form.body.label }}
+          {{ form.body }}
+        </div>
+
+        {{ form.submit(class="btn-primary") }}
+
+      </form>
+    </div>
+  </main>
+{% endblock %}

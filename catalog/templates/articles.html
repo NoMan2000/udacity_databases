@@ -1,0 +1,55 @@
+{% extends "partials/layout.html" %}
+
+{% block content %}
+  <main class="container signup-section">
+    <div class="section-content">
+      <h2>Create an account</h2>
+
+      <form method="POST" action="/articles">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+          {{ form.author.label }}
+          {{ form.author }}
+        </div>
+
+        <div class="form-group">
+          {{ form.title.label }}
+          {{ form.title }}
+        </div>
+
+        <div class="form-group">
+          {{ form.slug.label }}
+          {{ form.slug }}
+        </div>
+
+        <div class="form-group">
+          {{ form.lead.label }}
+          {{ form.lead }}
+        </div>
+
+        <div class="form-group">
+          {{ form.body.label }}
+          {{ form.body }}
+        </div>
+
+        {{ form.submit(class="btn-primary") }}
+      </form>
+    </div>
+    <div class="section-full-width">
+      {% for article in all_articles %}
+      <section class="card">
+        <div class="author"><strong>Author:</strong>{{article.authors.name}}</div>
+        <div class="title"><strong>Title:</strong>{{article.title}}</div>
+        <div><strong>Slug:</strong>{{article.slug}}</div>
+        <div><strong>Lead:</strong>{{article.lead}}</div>
+        <div><strong>Body:</strong>{{article.body}}</div>
+        <form action="/delete/article/{{article.id}}" method="post">
+          <button class="delete">Delete</button>
+        </form>
+      </section>
+      {% endfor %}
+    </div>
+
+  </main>
+{% endblock %}
