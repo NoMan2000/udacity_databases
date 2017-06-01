@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from models import db, Articles, Author
 from forms import ArticlesForm, AuthorsForm
+import datetime
+
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/public'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/michaelsoileau'
 db.init_app(app)
 
 app.secret_key = "development-key"
@@ -33,15 +35,15 @@ def articles_list():
 
   all_articles = Articles.query.all()
   all_authors = Author.query.all()
-
   if request.method == "POST":
     if form.validate() != False:
       newArticle = Articles(
-        form.author.data,
+        request.form.get('author'),
         form.title.data,
         form.slug.data,
         form.lead.data,
         form.body.data,
+        datetime.datetime.now()
       )
       print(newArticle)
       db.session.add(newArticle)
