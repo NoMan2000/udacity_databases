@@ -1,0 +1,20 @@
+{% extends "partials/layout.html" %}
+
+{% block content %}
+<main class="container signup-section">
+    <div class="section-content">
+        <h2>Top Authors</h2>
+
+        <div class="section-full-width">
+            {% for article in top_articles %}
+            <section class="card">
+                <div class="author"><strong>Author:</strong>{{article.name}}%</div>
+                <div><strong>Total Views:</strong>{{article.totalviews}}</div>
+
+            </section>
+            {% endfor %}
+        </div>
+    </div>
+
+</main>
+{% endblock %}

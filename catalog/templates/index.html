@@ -1,18 +1,19 @@
 {% extends "partials/layout.html" %}
 
 {% block content %}
-  <main class="hero-section">
+<main class="hero-section">
     <div class="container">
-      
-      <div class="section-content">
-        {% for route in route_list %}
-          <a href="{{route}}">{{route}}</a>
-        {% endfor %}
 
-      </div>
+        <div class="section-content">
+            {% for (route_name, route_path) in route_list.items() %}
 
-      <div class="clearfix"></div>
+            <a href="{{route_path}}">{{route_name}}</a>
+            {% endfor %}
+
+        </div>
+
+        <div class="clearfix"></div>
 
     </div>
-  </main>
+</main>
 {% endblock %}

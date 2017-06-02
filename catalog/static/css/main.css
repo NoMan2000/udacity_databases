@@ -178,6 +178,7 @@ header {
 .hero-section .section-content {
   position: relative;
   top: 100px;
+  width:100%;
 }
 
 .hero-section .section-content h2 {

@@ -3,7 +3,7 @@
 {% block content %}
   <main class="container signup-section">
     <div class="section-content">
-      <h2>Create an account</h2>
+      <h2>Add new Article</h2>
 
       <form method="POST" action="/articles">
         {{ form.hidden_tag() }}
@@ -41,6 +41,9 @@
         {{ form.submit(class="btn-primary") }}
       </form>
     </div>
+
+
+
     <div class="section-full-width">
       {% for article in all_articles %}
       <section class="card">
@@ -49,7 +52,7 @@
         <div><strong>Slug:</strong>{{article.slug}}</div>
         <div><strong>Lead:</strong>{{article.lead}}</div>
         <div><strong>Body:</strong>{{article.body}}</div>
-        <form action="/delete/article/{{article.id}}" method="post">
+        <form action="/articles/delete/{{article.id}}" method="post">
           <button class="delete">Delete</button>
         </form>
       </section>

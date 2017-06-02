@@ -5,32 +5,34 @@
     <div class="section-content">
       <h2>Add New Author</h2>
 
-      <form method="POST" id="submitAuthor" action="/update_author">
+      <form method="POST" id="submitAuthor" action="/authors">
         {{ form.hidden_tag() }}
 
-        <div class="form-group" id="authorTitle">
-          {{ form.title.label }}
-          {{ form.title }}
+        <div class="form-group" id="authorName">
+          {{ form.name.label }}
+          {{ form.name }}
         </div>
 
-        <div class="form-group" id="authorLabel">
-          {{ form.slug.label }}
-          {{ form.slug }}
+        <div class="form-group" id="authorBio">
+          {{ form.bio.label }}
+          {{ form.bio }}
         </div>
 
-        <div class="form-group" id="authorLead">
-          {{ form.lead.label }}
-          {{ form.lead }}
-        </div>
-
-        <div class="form-group" id="authorBody">
-          {{ form.body.label }}
-          {{ form.body }}
-        </div>
 
         {{ form.submit(class="btn-primary") }}
 
       </form>
+    </div>
+    <div class="section-full-width">
+      {% for author in all_authors %}
+      <section class="card">
+        <div class="author"><strong>Name:</strong>{{author.name}}</div>
+        <div class="title"><strong>Bio:</strong>{{author.bio}}</div>
+        <form action="/authors/delete/{{author.id}}" method="post">
+          <button class="delete">Delete</button>
+        </form>
+      </section>
+      {% endfor %}
     </div>
   </main>
 {% endblock %}
