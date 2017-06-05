@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import datetime
 
 from flask import Flask, render_template, request
@@ -41,8 +42,8 @@ def articles_list():
     all_articles = Articles.query.all()
     all_authors = Author.query.all()
     if request.method == "POST":
-        if form.validate() != False:
-            newArticle = Articles(
+        if form.validate() is not False:
+            new_article = Articles(
                 request.form.get('author'),
                 form.title.data,
                 form.slug.data,
@@ -50,7 +51,7 @@ def articles_list():
                 form.body.data,
                 datetime.datetime.now()
             )
-            db.session.add(newArticle)
+            db.session.add(new_article)
             db.session.commit()
             form = ArticlesForm()  # Re-render the form
 
@@ -64,23 +65,22 @@ def articles_list():
 
 @app.route(route_list.get('top_articles'))
 def top_articles():
-    grouped = db.engine.execute('''
-                    SELECT 
-                    COUNT(log.path) AS totalViews,
-                    articles.slug,
-                    articles.title,
-                    authors.name
-                    FROM log, articles, authors
-                    WHERE log.path != '/' AND 
-                    articles.slug = SUBSTR(log.path, LENGTH('/article/') + 1)
-                    AND articles.author = authors.id
-                    GROUP BY 
-                    articles.slug, 
-                    authors.name,
-                    articles.title
-                    ORDER BY totalViews DESC
-                
-                    ''').fetchall()
+    grouped = db. \
+        engine. \
+        execute('''SELECT
+                   COUNT(log.path) AS totalViews,
+                   articles.slug,
+                   articles.title,
+                   authors.name
+                   FROM log, articles, authors
+                   WHERE log.path != '/' AND
+                   articles.slug = SUBSTR(log.path, LENGTH('/article/') + 1)
+                   AND articles.author = authors.id
+                   GROUP BY
+                   articles.slug,
+                   authors.name,
+                   articles.title
+                   ORDER BY totalViews DESC''').fetchall()
 
     return render_template('articles-top.html', top_articles=grouped)
 
@@ -88,19 +88,18 @@ def top_articles():
 @app.route(route_list.get('top_authors'))
 def top_authors():
     grouped = db.engine.execute('''
-                    SELECT 
+                    SELECT
                     COUNT(authors.id) AS totalViews,
                     authors.name
                     FROM log, authors, articles
-                    WHERE log.path != '/' AND 
-                    articles.slug = SUBSTR(log.path, LENGTH('/article/') + 1)
+                    WHERE log.path != '/' AND
+                    articles.slug =
+                    SUBSTR(log.path, LENGTH('/article/') + 1)
                     AND articles.author = authors.id
-                    GROUP BY 
-                  	authors.name,
+                    GROUP BY
+                    authors.name,
                     authors.id
-                   
                     ORDER BY totalViews DESC
-
                     ''').fetchall()
 
     return render_template('authors-top.html', top_articles=grouped)
@@ -110,22 +109,22 @@ def top_authors():
 @app.route(route_list.get('errors_per_day'))
 def error_route():
     errors = db.engine.execute('''
-                        WITH t AS 
+                        WITH t AS
                         (SELECT DATE(log.time) AS failureDate,
-                        ROUND((SUM(CASE WHEN 
+                        ROUND((SUM(CASE WHEN
                             SUBSTRING(log.status, 0, 4)::INTEGER >= 400
                             THEN 1
                             ELSE 0
                             END
-                        )  * 100.0)::DECIMAL / (COUNT(log.status)), 1) AS totalFailures
+                        )  * 100.0)::DECIMAL /
+                        (COUNT(log.status)), 1) AS totalFailures
                         FROM log GROUP BY DATE(log.time)
                         )
-                        SELECT t.totalFailures AS failure, 
+                        SELECT t.totalFailures AS failure,
                         to_char(t.failureDate, 'Month DD, YYYY') AS date
                         FROM t
                         GROUP BY t.totalFailures, t.failureDate
                         HAVING t.totalFailures > 1
-
                         ''').fetchall()
 
     return render_template('errors.html', errors=errors)
@@ -144,8 +143,12 @@ def authors():
     form = AuthorsForm()
     all_authors = Author.query.all()
     if request.method == "POST":
-        if form.validate() == False:
-            return render_template("authors.html", form=form, all_authors=all_authors)
+        if form.validate() is False:
+            return render_template(
+                "authors.html",
+                form=form,
+                all_authors=all_authors
+            )
         else:
             newAuthor = Author(
                 request.form.get('author'),
@@ -156,10 +159,18 @@ def authors():
             db.session.commit()
             form = AuthorsForm()  # Re-render the form
 
-            return render_template('authors.html', form=form, all_authors=all_authors)
+            return render_template(
+                'authors.html',
+                form=form,
+                all_authors=all_authors
+            )
 
     elif request.method == 'GET':
-        return render_template('authors.html', form=form, all_authors=all_authors)
+        return render_template(
+            'authors.html',
+            form=form,
+            all_authors=all_authors
+        )
 
 
 if __name__ == "__main__":
