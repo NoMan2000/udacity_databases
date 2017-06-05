@@ -1,38 +1,38 @@
 {% extends "partials/layout.html" %}
 
 {% block content %}
-  <main class="container signup-section">
+<main class="container signup-section">
     <div class="section-content">
-      <h2>Add New Author</h2>
+        <h2>Add New Author</h2>
 
-      <form method="POST" id="submitAuthor" action="/authors">
-        {{ form.hidden_tag() }}
+        <form method="POST" id="submitAuthor" action="/authors">
+            {{ form.hidden_tag() }}
 
-        <div class="form-group" id="authorName">
-          {{ form.name.label }}
-          {{ form.name }}
-        </div>
+            <div class="form-group" id="authorName">
+                {{ form.name.label }}
+                {{ form.name }}
+            </div>
 
-        <div class="form-group" id="authorBio">
-          {{ form.bio.label }}
-          {{ form.bio }}
-        </div>
+            <div class="form-group" id="authorBio">
+                {{ form.bio.label }}
+                {{ form.bio }}
+            </div>
 
 
-        {{ form.submit(class="btn-primary") }}
+            {{ form.submit(class="btn-primary") }}
 
-      </form>
+        </form>
     </div>
     <div class="section-full-width">
-      {% for author in all_authors %}
-      <section class="card">
-        <div class="author"><strong>Name:</strong>{{author.name}}</div>
-        <div class="title"><strong>Bio:</strong>{{author.bio}}</div>
-        <form action="/authors/delete/{{author.id}}" method="post">
-          <button class="delete">Delete</button>
-        </form>
-      </section>
-      {% endfor %}
+        {% for author in all_authors %}
+        <section class="card">
+            <div class="author"><strong>Name:</strong>{{author.name}}</div>
+            <div class="title"><strong>Bio:</strong>{{author.bio}}</div>
+            <form action="/authors/delete/{{author.id}}" method="post">
+                <button class="delete">Delete</button>
+            </form>
+        </section>
+        {% endfor %}
     </div>
-  </main>
+</main>
 {% endblock %}

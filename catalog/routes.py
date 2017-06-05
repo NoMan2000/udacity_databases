@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, session, redirect, url_for
-from models import db, Articles, Author
-from forms import ArticlesForm, AuthorsForm
 import datetime
+
+from flask import Flask, render_template, request
+
+from forms import ArticlesForm, AuthorsForm
+from models import db, Articles, Author
 
 app = Flask(__name__)
 
@@ -52,7 +54,12 @@ def articles_list():
             db.session.commit()
             form = ArticlesForm()  # Re-render the form
 
-    return render_template('articles.html', form=form, all_articles=all_articles, all_authors=all_authors)
+    return render_template(
+        'articles.html',
+        form=form,
+        all_articles=all_articles,
+        all_authors=all_authors
+    )
 
 
 @app.route(route_list.get('top_articles'))
@@ -106,14 +113,15 @@ def error_route():
                         WITH t AS 
                         (SELECT DATE(log.time) AS failureDate,
                         ROUND((SUM(CASE WHEN 
-                            SUBSTRING(log.status, 0, 4)::integer >= 400
+                            SUBSTRING(log.status, 0, 4)::INTEGER >= 400
                             THEN 1
                             ELSE 0
                             END
-                        )  * 100.0)::decimal / (COUNT(log.status)),1) AS totalFailures
+                        )  * 100.0)::DECIMAL / (COUNT(log.status)), 1) AS totalFailures
                         FROM log GROUP BY DATE(log.time)
                         )
-                        SELECT t.totalFailures AS failure, to_char(t.failureDate, 'Month DD, YYYY') AS date
+                        SELECT t.totalFailures AS failure, 
+                        to_char(t.failureDate, 'Month DD, YYYY') AS date
                         FROM t
                         GROUP BY t.totalFailures, t.failureDate
                         HAVING t.totalFailures > 1

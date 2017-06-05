@@ -1,0 +1,6 @@
+#!/Users/michaelsoileau/Sites/UdacityDatabase/fullstack-nanodegree-vm/vagrant/pylearn/bin/python
+"""Mypy type checker command line tool."""
+
+from mypy.main import main
+
+main(__file__)
